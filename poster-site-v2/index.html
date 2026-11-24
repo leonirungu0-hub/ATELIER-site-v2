@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>Atelier Surface | Posters on steel, acrylic &amp; canvas</title>
+  <meta name="description" content="Posters of places, cities and space, printed on gallery canvas, brushed stainless steel, aluminum or acrylic glass. Explore them in 3D and preview each one before you order.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="topbar">Free shipping on every order <span aria-hidden="true">&middot;</span> Made to order <span aria-hidden="true">&middot;</span> 30-day returns</div>
+  <canvas id="ink" aria-hidden="true"></canvas>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="#top" class="logo" aria-label="Atelier Surface, home"><b>Atelier</b><small>Surface &middot; Posters</small></a>
+
+      <nav class="nav" aria-label="Main">
+        <div class="mega-triggers">
+          <button class="mega-trigger" type="button" data-pane="explore" aria-expanded="false" aria-controls="mega">Explore <svg viewBox="0 0 12 8" width="12" height="8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+          <button class="mega-trigger" type="button" data-pane="custom" aria-expanded="false" aria-controls="mega">Custom Posters <svg viewBox="0 0 12 8" width="12" height="8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+          <a class="pill-link" href="#showcase" data-act="goto" data-target="#showcase"><span aria-hidden="true">&#10042;</span> 3D Gallery</a>
+          <button class="mega-trigger" type="button" data-pane="foryou" aria-expanded="false" aria-controls="mega">For You <svg viewBox="0 0 12 8" width="12" height="8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+        </div>
+      </nav>
+
+      <form id="search-form" class="search" role="search" autocomplete="off">
+        <div class="search-field">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input id="search-input" type="search" placeholder="Search posters" aria-label="Search posters" role="combobox" aria-expanded="false" aria-controls="search-results" aria-autocomplete="list">
+        </div>
+        <div id="search-results" class="search-results" role="listbox" hidden></div>
+      </form>
+
+      <div class="actions">
+        <button id="wish-btn" class="icon-action" type="button" aria-label="Open your wishlist">
+          <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          <span class="badge" id="wish-count" hidden>0</span>
+          <span>Wishlist</span>
+        </button>
+        <button id="cart-btn" class="icon-action" type="button" aria-label="Open cart, 0 items">
+          <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M3 4h2.5l2.2 10.2a1 1 0 0 0 1 .8h8.6a1 1 0 0 0 1-.8L20 8H6.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="9.5" cy="19" r="1.4" fill="currentColor"/><circle cx="16.5" cy="19" r="1.4" fill="currentColor"/></svg>
+          <span class="badge" id="cart-count" hidden>0</span>
+          <span>Cart</span>
+        </button>
+        <button id="menu-btn" class="icon-action menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu">Menu</button>
+      </div>
+    </div>
+
+    <div id="mega" class="mega" hidden>
+      <div class="mega-pane" data-pane="explore" hidden><div id="pane-explore" class="mega-grid" style="--cols:4"></div></div>
+      <div class="mega-pane" data-pane="custom" hidden><div id="pane-custom" class="mega-grid" style="--cols:3"></div></div>
+      <div class="mega-pane" data-pane="foryou" hidden><div id="pane-foryou" class="mega-grid" style="--cols:3"></div></div>
+    </div>
+    <div id="mobile-menu" class="mobile-menu" hidden></div>
+  </header>
+
+  <main id="top">
+    <!-- 3D hero: a ring of posters you can drag -->
+    <section class="hero" id="hero" data-no-ink>
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <span class="pill">&#10042; New: explore the collection in 3D</span>
+          <h1>Turn your walls into a <em>gallery</em>.</h1>
+          <p>Posters of places, cities and space, printed on steel, acrylic, aluminum or canvas. Spin the collection, pick a surface, and preview it before you buy.</p>
+          <div class="hero-actions">
+            <a class="btn btn-lime" href="#featured" data-act="goto" data-target="#featured">Shop posters</a>
+            <a class="btn btn-ghost" href="#showcase" data-act="goto" data-target="#showcase">Fly through in 3D</a>
+          </div>
+          <ul class="hero-stats">
+            <li><strong id="stat-count">20</strong> posters</li>
+            <li><strong>4</strong> surfaces</li>
+            <li><strong>Free</strong> shipping</li>
+          </ul>
+        </div>
+        <div class="hero-stage">
+          <canvas id="hero3d" role="img" aria-label="A ring of floating posters. Drag to spin it, click a poster to customize it."></canvas>
+          <div class="hero-fallback" aria-hidden="true">
+            <img src="./img/thumbs/bora-bora.jpg" alt="">
+            <img src="./img/thumbs/kyoto.jpg" alt="">
+            <img src="./img/thumbs/saturn.jpg" alt="">
+          </div>
+          <p class="hero-hint">Drag to spin &middot; Click a poster to customize it</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <ul class="benefits">
+        <li class="benefit"><span class="tick" aria-hidden="true">&check;</span> Free shipping on every order</li>
+        <li class="benefit"><span class="tick" aria-hidden="true">&check;</span> Made to order, ready to hang</li>
+        <li class="benefit"><span class="tick" aria-hidden="true">&check;</span> 30-day returns</li>
+        <li class="benefit"><span class="tick" aria-hidden="true">&check;</span> Four premium surfaces</li>
+      </ul>
+    </div>
+
+    <section id="categories" class="section tight">
+      <div class="container">
+        <div class="section-head">
+          <h2>Shop by category</h2>
+          <a class="link-more" id="cat-all" href="#">See all posters</a>
+        </div>
+        <div id="cat-tiles" class="tiles"></div>
+      </div>
+    </section>
+
+    <section id="featured" class="section tight">
+      <div class="container">
+        <div class="section-head">
+          <h2>Featured posters</h2>
+          <div class="row-nav">
+            <button id="row-prev" type="button" aria-label="Scroll left">&lsaquo;</button>
+            <button id="row-next" type="button" aria-label="Scroll right">&rsaquo;</button>
+          </div>
+        </div>
+        <div id="gallery" class="row-scroll"></div>
+      </div>
+    </section>
+
+    <!-- 3D tunnel: scroll to fly through every poster -->
+    <section id="showcase" class="showcase" aria-label="3D gallery" data-no-ink>
+      <div class="showcase-sticky">
+        <canvas id="s3d" role="img" aria-label="A 3D tunnel of floating posters that moves as you scroll"></canvas>
+        <div class="showcase-copy" id="s3d-copy">
+          <span class="pill dark">&#10042; 3D gallery</span>
+          <h2>Fly through the collection</h2>
+          <p>Scroll to move forward. Click a poster to customize it.</p>
+        </div>
+        <div class="showcase-hud" aria-hidden="true">
+          <span id="s3d-now"></span>
+          <div class="s3d-bar"><i id="s3d-fill"></i></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3D surfaces -->
+    <section id="surfaces-section" class="section surfaces3d">
+      <div class="container">
+        <div class="section-head stack">
+          <h2>Four surfaces, in 3D</h2>
+          <p class="lead">Move your mouse over the panels to catch the light. Click one to preview it on your poster.</p>
+        </div>
+        <div class="slab-stage" data-no-ink>
+          <canvas id="slabs3d" role="img" aria-label="Four 3D panels showing canvas, steel, aluminum and acrylic. Click one to choose that surface."></canvas>
+        </div>
+        <div id="surfaces" class="surfaces"></div>
+      </div>
+    </section>
+
+    <section id="customize" class="section">
+      <div class="container config">
+        <div id="stage" class="stage">
+          <div id="preview-frame" class="frame canvas">
+            <img id="preview-img" src="./img/iceland.jpg" alt="">
+          </div>
+          <span id="stage-label" class="stage-label" aria-live="polite"></span>
+        </div>
+
+        <div class="config-panel">
+          <div>
+            <div class="config-top">
+              <span id="config-cat" class="pill soft"></span>
+              <button id="config-wish" class="heart inline" type="button" data-save="" aria-pressed="false" aria-label="Save to your wishlist"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
+            </div>
+            <h2 id="config-title" class="config-title"></h2>
+            <p id="config-desc" class="muted"></p>
+          </div>
+
+          <fieldset class="fieldset">
+            <legend>Surface</legend>
+            <div id="material-options" class="options"></div>
+            <p id="material-desc" class="material-desc"></p>
+            <ul id="material-details" class="material-details"></ul>
+          </fieldset>
+
+          <fieldset class="fieldset">
+            <legend>Size</legend>
+            <div id="size-options" class="options"></div>
+          </fieldset>
+
+          <div class="buy-row">
+            <span id="config-total" class="total" aria-live="polite"></span>
+            <div class="qty" role="group" aria-label="Quantity">
+              <button id="qty-minus" type="button" aria-label="Decrease quantity">&minus;</button>
+              <output id="qty-value">1</output>
+              <button id="qty-plus" type="button" aria-label="Increase quantity">+</button>
+            </div>
+            <button id="add-to-cart" class="btn btn-primary" type="button">Add to cart</button>
+          </div>
+          <p class="fine">Free shipping &middot; Made to order &middot; 30-day returns</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="f-brand">
+        <b>Atelier</b>
+        <small>Surface &middot; Posters</small>
+        <p>Posters of places, cities and space on steel, acrylic, aluminum and canvas.</p>
+      </div>
+      <div class="f-col">
+        <h3>Shop</h3>
+        <button type="button" class="flink" data-act="all" data-id="All">All posters</button>
+        <button type="button" class="flink" data-act="all" data-id="Places">Places</button>
+        <button type="button" class="flink" data-act="all" data-id="Cities">Cities</button>
+        <button type="button" class="flink" data-act="all" data-id="Space">Space</button>
+        <button type="button" class="flink" data-act="all" data-id="Saved">Your wishlist</button>
+      </div>
+      <div class="f-col">
+        <h3>Surfaces</h3>
+        <button type="button" class="flink" data-act="material" data-id="canvas">Gallery Canvas</button>
+        <button type="button" class="flink" data-act="material" data-id="stainless-steel">Brushed Stainless Steel</button>
+        <button type="button" class="flink" data-act="material" data-id="aluminum">Aluminum Dibond</button>
+        <button type="button" class="flink" data-act="material" data-id="acrylic">Acrylic Glass</button>
+      </div>
+      <div class="f-col">
+        <h3>Explore</h3>
+        <a class="flink" href="#featured" data-act="goto" data-target="#featured">Featured posters</a>
+        <a class="flink" href="#showcase" data-act="goto" data-target="#showcase">3D gallery</a>
+        <a class="flink" href="#surfaces-section" data-act="goto" data-target="#surfaces-section">Compare surfaces</a>
+        <a class="flink" href="#customize" data-act="goto" data-target="#customize">Customize a poster</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year"></span> Atelier Surface &middot; Posters are AI-assisted artwork</span>
+      <span>Free shipping &middot; Made to order &middot; 30-day returns</span>
+    </div>
+  </footer>
+
+  <div id="all-view" class="all-view" hidden role="dialog" aria-modal="true" aria-labelledby="all-title">
+    <div class="container">
+      <div class="all-head">
+        <h2 id="all-title">All posters</h2>
+        <div class="all-actions">
+          <button id="all-cart" class="btn btn-outline cart-btn" type="button" aria-label="Open cart, 0 items">Cart <span id="all-cart-count" class="cart-count" hidden>0</span></button>
+          <button id="all-close" class="btn btn-primary" type="button">Back</button>
+        </div>
+      </div>
+      <div id="all-query" class="query-pill" hidden>Search: <b id="all-query-text"></b> <button id="all-query-clear" type="button" aria-label="Clear search">&times;</button></div>
+      <div id="all-chips" class="chips" role="group" aria-label="Filter posters"></div>
+      <div id="all-grid" class="grid"></div>
+    </div>
+  </div>
+
+  <div id="panel-overlay" class="overlay panel-overlay"></div>
+  <aside id="panel" class="drawer panel" inert aria-hidden="true" role="dialog" aria-labelledby="panel-name">
+    <div class="drawer-head">
+      <span class="pill soft" id="panel-cat"></span>
+      <div class="head-actions">
+        <button id="panel-wish" class="heart inline" type="button" data-save="" aria-pressed="false" aria-label="Save to your wishlist"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
+        <button id="panel-close" class="icon-btn" type="button" aria-label="Close and keep browsing">&times;</button>
+      </div>
+    </div>
+    <div class="drawer-body panel-body">
+      <div id="panel-stage" class="stage panel-stage">
+        <div id="panel-frame" class="frame canvas"><img id="panel-img" src="./img/iceland.jpg" alt=""></div>
+        <span id="panel-stage-label" class="stage-label" aria-live="polite"></span>
+      </div>
+      <div>
+        <h2 id="panel-name" class="panel-name"></h2>
+        <p id="panel-desc" class="muted" style="margin-top:10px"></p>
+      </div>
+      <fieldset class="fieldset">
+        <legend>Surface</legend>
+        <div id="panel-material-options" class="options"></div>
+        <p id="panel-material-desc" class="material-desc"></p>
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend>Size</legend>
+        <div id="panel-size-options" class="options"></div>
+      </fieldset>
+    </div>
+    <div class="drawer-foot panel-foot">
+      <div class="buy-row">
+        <span id="panel-total" class="total" aria-live="polite"></span>
+        <div class="qty" role="group" aria-label="Quantity">
+          <button id="panel-minus" type="button" aria-label="Decrease quantity">&minus;</button>
+          <output id="panel-qty">1</output>
+          <button id="panel-plus" type="button" aria-label="Increase quantity">+</button>
+        </div>
+      </div>
+      <div class="panel-actions">
+        <button id="panel-add" class="btn btn-primary" type="button">Add to cart</button>
+        <button id="panel-view-cart" class="btn btn-outline" type="button">View cart</button>
+      </div>
+    </div>
+  </aside>
+
+  <div id="overlay" class="overlay"></div>
+  <aside id="drawer" class="drawer" inert aria-hidden="true" aria-labelledby="drawer-title" role="dialog">
+    <div class="drawer-head">
+      <h2 id="drawer-title">Your cart</h2>
+      <button id="drawer-close" class="icon-btn" type="button" aria-label="Close cart">&times;</button>
+    </div>
+
+    <div id="cart-view">
+      <div id="drawer-body" class="drawer-body"></div>
+      <div id="drawer-foot" class="drawer-foot" hidden>
+        <div class="summary-row"><span class="muted">Subtotal</span><span id="subtotal"></span></div>
+        <div class="summary-row"><span class="muted">Shipping</span><span>Free</span></div>
+        <div class="summary-row total-row"><span>Total</span><span id="grand-total"></span></div>
+        <button id="checkout-btn" class="btn btn-primary" type="button">Checkout</button>
+      </div>
+    </div>
+
+    <div id="checkout-view" class="drawer-body" hidden>
+      <form id="checkout-form" class="form" novalidate>
+        <label class="field">Full name<input name="name" autocomplete="name" required></label>
+        <label class="field">Email<input name="email" type="email" autocomplete="email" required></label>
+        <label class="field">Shipping address<input name="address" autocomplete="street-address" required></label>
+        <label class="field">Card number<input name="card" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" pattern="[0-9 ]{12,23}" required></label>
+        <div class="field-row">
+          <label class="field">Expiry<input name="exp" autocomplete="cc-exp" placeholder="MM/YY" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" required></label>
+          <label class="field">CVC<input name="cvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" pattern="[0-9]{3,4}" required></label>
+        </div>
+        <button class="btn btn-primary" type="submit">Pay <span id="pay-total"></span></button>
+        <button id="back-to-cart" class="btn btn-outline" type="button">Back to cart</button>
+        <p class="notice">Demo checkout: no real payment is processed. Connect a payment provider on a server to accept real orders.</p>
+      </form>
+      <div id="success-view" class="success" hidden>
+        <h3 id="success-title"></h3>
+        <p class="muted">Your order has been placed. A confirmation will be sent to your email.</p>
+        <button id="success-close" class="btn btn-outline" type="button">Continue shopping</button>
+      </div>
+    </div>
+  </aside>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <span id="s3d-tip" class="s3d-tip" hidden></span>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="./script.js"></script>
+  <script src="./scenes.js"></script>
+</body>
+</html>
