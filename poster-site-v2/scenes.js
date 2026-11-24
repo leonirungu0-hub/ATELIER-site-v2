@@ -304,7 +304,7 @@
       holder.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 20), lineMat));
       if (k % 3 === 0) {
         holder.add(
-          new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: [0xff2f55, 0xd99be8, 0x2335a8][k % 3 === 0 ? (k / 3) % 3 : 0], polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }))
+          new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: [0xc6ff3a, 0x7b6cff, 0x2335a8][k % 3 === 0 ? (k / 3) % 3 : 0], polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }))
         );
       }
       const ang = k * 2.1 + 1;
