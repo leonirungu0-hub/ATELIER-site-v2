@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#110e33">
   <title>Atelier Surface | Posters on steel, acrylic &amp; canvas</title>
   <meta name="description" content="Posters of places, cities and space, printed on gallery canvas, brushed stainless steel, aluminum or acrylic glass. Explore them in 3D and preview each one before you order.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
@@ -23,7 +23,7 @@
         <div class="mega-triggers">
           <button class="mega-trigger" type="button" data-pane="explore" aria-expanded="false" aria-controls="mega">Explore <svg viewBox="0 0 12 8" width="12" height="8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
           <button class="mega-trigger" type="button" data-pane="custom" aria-expanded="false" aria-controls="mega">Custom Posters <svg viewBox="0 0 12 8" width="12" height="8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
-          <a class="pill-link" href="#showcase" data-act="goto" data-target="#showcase"><span aria-hidden="true">&#10042;</span> 3D Gallery</a>
+          <a class="pill-link" href="#showcase" data-act="goto" data-target="#showcase">3D Gallery</a>
           <button class="mega-trigger" type="button" data-pane="foryou" aria-expanded="false" aria-controls="mega">For You <svg viewBox="0 0 12 8" width="12" height="8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
         </div>
       </nav>
@@ -62,9 +62,29 @@
   <main id="top">
     <!-- 3D hero: a ring of posters you can drag -->
     <section class="hero" id="hero" data-no-ink>
+      <div class="aura" aria-hidden="true">
+        <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="gWave" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ff2f55"/><stop offset=".55" stop-color="#e8207a"/><stop offset="1" stop-color="#b3168f"/>
+            </linearGradient>
+            <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="70"/></filter>
+          </defs>
+          <rect width="1600" height="900" fill="#110e33"/>
+          <g filter="url(#soft)" class="drift">
+            <ellipse cx="720" cy="330" rx="560" ry="250" transform="rotate(-18 720 330)" fill="url(#gWave)"/>
+            <ellipse cx="1280" cy="170" rx="380" ry="190" fill="#d99be8" opacity=".85"/>
+            <ellipse cx="1050" cy="400" rx="260" ry="170" fill="#ff6fa3" opacity=".8"/>
+            <ellipse cx="930" cy="660" rx="250" ry="400" transform="rotate(28 930 660)" fill="#2335a8"/>
+            <ellipse cx="1460" cy="760" rx="320" ry="210" fill="#ff2f55" opacity=".9"/>
+            <ellipse cx="170" cy="560" rx="420" ry="320" fill="#110e33" opacity=".85"/>
+            <ellipse cx="380" cy="880" rx="420" ry="160" fill="#2a1a6e" opacity=".9"/>
+          </g>
+        </svg>
+      </div>
       <div class="hero-inner">
         <div class="hero-copy">
-          <span class="pill">&#10042; New: explore the collection in 3D</span>
+          <span class="pill">New &middot; the collection in 3D</span>
           <h1>Turn your walls into a <em>gallery</em>.</h1>
           <p>Posters of places, cities and space, printed on steel, acrylic, aluminum or canvas. Spin the collection, pick a surface, and preview it before you buy.</p>
           <div class="hero-actions">
@@ -126,7 +146,7 @@
       <div class="showcase-sticky">
         <canvas id="s3d" role="img" aria-label="A 3D tunnel of floating posters that moves as you scroll"></canvas>
         <div class="showcase-copy" id="s3d-copy">
-          <span class="pill dark">&#10042; 3D gallery</span>
+          <span class="pill dark">3D gallery</span>
           <h2>Fly through the collection</h2>
           <p>Scroll to move forward. Click a poster to customize it.</p>
         </div>

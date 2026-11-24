@@ -150,7 +150,7 @@
     const N = list.length;
     const R = 4.7;
     const H = 1.45;
-    const frameMat = new THREE.MeshBasicMaterial({ color: 0x1b1b22 });
+    const frameMat = new THREE.MeshBasicMaterial({ color: 0x1a1648 });
     const items = [];
     const hit = [];
 
@@ -173,13 +173,13 @@
     });
 
     // glowing floor ring
-    const glow = new THREE.Mesh(new THREE.TorusGeometry(R + 0.35, 0.015, 8, 120), new THREE.MeshBasicMaterial({ color: 0xd7ff3a }));
+    const glow = new THREE.Mesh(new THREE.TorusGeometry(R + 0.35, 0.012, 8, 120), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.55 }));
     glow.rotation.x = Math.PI / 2;
     glow.position.y = -1.15;
     scene.add(glow);
     const disc = new THREE.Mesh(
       new THREE.CircleGeometry(R + 1.6, 64),
-      new THREE.MeshBasicMaterial({ color: 0xd7ff3a, transparent: true, opacity: 0.05, depthWrite: false })
+      new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.04, depthWrite: false })
     );
     disc.rotation.x = -Math.PI / 2;
     disc.position.y = -1.16;
@@ -254,7 +254,7 @@
       showSec.hidden = true;
       return;
     }
-    const BG = 0x0b0b0f;
+    const BG = 0x0b0a2a;
     renderer.setClearColor(BG, 1);
     const scene = new THREE.Scene();
     scene.fog = new THREE.Fog(BG, 9, 36);
@@ -289,7 +289,7 @@
     });
 
     // line-art shapes (white) and a few solid lime ones drifting through the tunnel
-    const lineMat = new THREE.LineBasicMaterial({ color: 0xffffff });
+    const lineMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.35 });
     const geos = [
       new THREE.IcosahedronGeometry(0.8, 0),
       new THREE.OctahedronGeometry(0.8),
@@ -304,7 +304,7 @@
       holder.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 20), lineMat));
       if (k % 3 === 0) {
         holder.add(
-          new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: 0xd7ff3a, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }))
+          new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: [0xff2f55, 0xd99be8, 0x2335a8][k % 3 === 0 ? (k / 3) % 3 : 0], polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }))
         );
       }
       const ang = k * 2.1 + 1;
