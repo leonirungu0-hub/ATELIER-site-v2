@@ -1,19 +1,16 @@
-/* Three 3D sections:
-   1. Hero: a ring of posters you can drag, that also turns as you scroll.
-   2. Tunnel: scroll through the section to fly past every poster.
-   3. Surfaces: real 3D panels (canvas, steel, aluminum, acrylic) that catch the light.
+/* Two 3D sections:
+   1. Space gallery: scroll to fly past the planets and space features, through stars and nebula clouds.
+   2. Surfaces: real 3D panels (canvas, steel, aluminum, acrylic) that catch the light.
    Needs three.js (loaded from a CDN in index.html) and POSTERS / MATERIALS / state from script.js. */
 (function () {
   'use strict';
 
-  const heroSec = document.getElementById('hero');
   const showSec = document.getElementById('showcase');
   const slabSec = document.getElementById('surfaces-section');
   const tip = document.getElementById('s3d-tip');
 
   // Fall back to flat versions when 3D isn't possible (reduced motion, no three.js, no WebGL)
   function noThree() {
-    heroSec.classList.add('no3d');
     showSec.hidden = true;
     slabSec.classList.add('no3d');
   }
@@ -133,119 +130,8 @@
   };
 
   /* ====================================================================
-     1. HERO: a ring of posters
-     ==================================================================== */
-  function initHero() {
-    const canvas = document.getElementById('hero3d');
-    const renderer = makeRenderer(canvas, true);
-    if (!renderer) return heroSec.classList.add('no3d');
-    renderer.setClearColor(0x000000, 0);
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 80);
-    const ring = new THREE.Group();
-    scene.add(ring);
-
-    const list = [...POSTERS.filter(p => p.featured), ...POSTERS.filter(p => !p.featured)].slice(0, 10);
-    const N = list.length;
-    const R = 4.7;
-    const H = 1.45;
-    const frameMat = new THREE.MeshBasicMaterial({ color: 0x1a1648 });
-    const items = [];
-    const hit = [];
-
-    list.forEach((p, i) => {
-      const w = H * p.ratio;
-      const g = new THREE.Group();
-      const frame = new THREE.Mesh(new THREE.BoxGeometry(w + 0.1, H + 0.1, 0.08), frameMat);
-      frame.position.z = -0.05;
-      const tex = makeTex();
-      const img = new THREE.Mesh(new THREE.PlaneGeometry(w, H), new THREE.MeshBasicMaterial({ map: tex }));
-      img.userData.i = i;
-      g.add(frame, img);
-      const a = (i / N) * Math.PI * 2;
-      g.position.set(Math.sin(a) * R, 0, Math.cos(a) * R);
-      g.rotation.y = a; // front of each poster faces outward
-      ring.add(g);
-      items.push({ g, scale: 1, id: p.id, title: p.title });
-      hit.push(img);
-      loadImage(thumb(p.id)).then(im => setImage(tex, im));
-    });
-
-    // glowing floor ring
-    const glow = new THREE.Mesh(new THREE.TorusGeometry(R + 0.35, 0.012, 8, 120), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.55 }));
-    glow.rotation.x = Math.PI / 2;
-    glow.position.y = -1.15;
-    scene.add(glow);
-    const disc = new THREE.Mesh(
-      new THREE.CircleGeometry(R + 1.6, 64),
-      new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.04, depthWrite: false })
-    );
-    disc.rotation.x = -Math.PI / 2;
-    disc.position.y = -1.16;
-    scene.add(disc);
-
-    fit(renderer, camera, canvas);
-    addEventListener('resize', () => fit(renderer, camera, canvas));
-
-    const ptr = pointerOn(canvas);
-    let rot = 0;
-    let vel = 0;
-    let dragging = false;
-    let lastX = 0;
-    let moved = 0;
-    let hovered = -1;
-
-    canvas.addEventListener('pointerdown', e => {
-      dragging = true;
-      moved = 0;
-      lastX = e.clientX;
-      canvas.setPointerCapture(e.pointerId);
-      canvas.style.cursor = 'grabbing';
-    });
-    canvas.addEventListener('pointermove', e => {
-      if (!dragging) return;
-      const dx = e.clientX - lastX;
-      lastX = e.clientX;
-      moved += Math.abs(dx);
-      vel = dx * 0.006;
-      rot += vel;
-    });
-    const endDrag = () => {
-      dragging = false;
-    };
-    canvas.addEventListener('pointerup', endDrag);
-    canvas.addEventListener('pointercancel', endDrag);
-    canvas.addEventListener('click', e => {
-      if (moved > 6) return; // that was a drag, not a click
-      const i = pickFrom(canvas, camera, hit, e.clientX, e.clientY);
-      if (i >= 0) goCustomize(items[i].id);
-    });
-
-    const loop = makeLoop(() => {
-      if (!dragging) {
-        rot += vel + (hovered >= 0 ? 0.0006 : 0.0028); // slows down when you hover a poster
-        vel *= 0.94;
-      }
-      ring.rotation.y = rot + scrollY * 0.0012;
-      camera.position.set(ptr.x * 1.0, 2.3 + ptr.y * 0.5, 13);
-      camera.lookAt(0, -0.1, 0);
-
-      hovered = ptr.over && !dragging ? pickFrom(canvas, camera, hit, ptr.cx, ptr.cy) : -1;
-      canvas.style.cursor = dragging ? 'grabbing' : hovered >= 0 ? 'pointer' : 'grab';
-      if (hovered >= 0) showTip(items[hovered].title, ptr.cx, ptr.cy);
-      else hideTip();
-      items.forEach((o, i) => {
-        o.scale += ((i === hovered ? 1.09 : 1) - o.scale) * 0.15;
-        o.g.scale.setScalar(o.scale);
-      });
-      renderer.render(scene, camera);
-    });
-    whenVisible(heroSec, '100px 0px', loop.set);
-  }
-
-  /* ====================================================================
-     2. TUNNEL: scroll to fly through every poster (dark scene)
+     1. SPACE GALLERY: scroll to fly past the planets and space features,
+        through a starfield and drifting nebula clouds
      ==================================================================== */
   function initTunnel() {
     const canvas = document.getElementById('s3d');
@@ -254,14 +140,16 @@
       showSec.hidden = true;
       return;
     }
-    const BG = 0x0b0a2a;
+    const BG = 0x03030f;
     renderer.setClearColor(BG, 1);
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(BG, 9, 36);
-    const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 80);
+    scene.fog = new THREE.Fog(BG, 12, 44);
+    const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 300);
 
-    const N = POSTERS.length;
-    const STEP = 3.1;
+    // only the space posters: the planets, the Moon and the Sun
+    const gallery = POSTERS.filter(p => p.category === 'Space');
+    const N = gallery.length;
+    const STEP = 3.4;
     const RADIUS = 2.9;
     const FIRST_Z = -7;
     const H = 1.9;
@@ -269,7 +157,7 @@
     const clickable = [];
     const frameMat = new THREE.MeshBasicMaterial({ color: 0xf2f2f2 });
 
-    POSTERS.forEach((p, i) => {
+    gallery.forEach((p, i) => {
       const w = H * p.ratio;
       const g = new THREE.Group();
       const frame = new THREE.Mesh(new THREE.BoxGeometry(w + 0.14, H + 0.14, 0.1), frameMat);
@@ -288,37 +176,151 @@
       clickable.push(img);
     });
 
-    // line-art shapes (white) and a few solid lime ones drifting through the tunnel
-    const lineMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.35 });
-    const geos = [
-      new THREE.IcosahedronGeometry(0.8, 0),
-      new THREE.OctahedronGeometry(0.8),
-      new THREE.TorusGeometry(0.7, 0.28, 8, 20),
-      new THREE.BoxGeometry(1, 1, 1)
-    ];
-    const decor = [];
-    const DECOR = 12;
-    for (let k = 0; k < DECOR; k++) {
-      const geo = geos[k % geos.length];
-      const holder = new THREE.Group();
-      holder.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 20), lineMat));
-      if (k % 3 === 0) {
-        holder.add(
-          new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: [0xc6ff3a, 0x7b6cff, 0x2335a8][k % 3 === 0 ? (k / 3) % 3 : 0], polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }))
-        );
-      }
-      const ang = k * 2.1 + 1;
-      const rad = 1.5 + (k % 3) * 0.5;
-      holder.position.set(Math.cos(ang) * rad, Math.sin(ang) * rad * 0.8, FIRST_Z + 2 - k * ((N * STEP) / DECOR));
-      scene.add(holder);
-      decor.push({ g: holder, spin: (k % 2 ? 1 : -1) * (0.6 + (k % 4) * 0.2), phase: k });
+    /* ----- stars ----- */
+    function dotTex() {
+      const c = document.createElement('canvas');
+      c.width = c.height = 64;
+      const g = c.getContext('2d');
+      const r = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+      r.addColorStop(0, 'rgba(255,255,255,1)');
+      r.addColorStop(0.25, 'rgba(255,255,255,0.85)');
+      r.addColorStop(1, 'rgba(255,255,255,0)');
+      g.fillStyle = r;
+      g.fillRect(0, 0, 64, 64);
+      return new THREE.CanvasTexture(c);
     }
+    const dot = dotTex();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const tints = [
+      [1, 1, 1],
+      [0.74, 0.85, 1],
+      [1, 0.9, 0.76],
+      [0.86, 0.8, 1]
+    ];
+    const Z_NEAR = 20;
+    const Z_FAR = -150;
+    function makeStars(count, px, minBright) {
+      const pos = new Float32Array(count * 3);
+      const col = new Float32Array(count * 3);
+      for (let i = 0; i < count; i++) {
+        pos[i * 3] = (Math.random() * 2 - 1) * 80;
+        pos[i * 3 + 1] = (Math.random() * 2 - 1) * 55;
+        pos[i * 3 + 2] = Z_FAR + Math.random() * (Z_NEAR - Z_FAR);
+        const t = tints[(Math.random() * tints.length) | 0];
+        const b = minBright + Math.random() * (1 - minBright);
+        col[i * 3] = t[0] * b;
+        col[i * 3 + 1] = t[1] * b;
+        col[i * 3 + 2] = t[2] * b;
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+      const mat = new THREE.PointsMaterial({
+        size: px * dpr,
+        map: dot,
+        vertexColors: true,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        sizeAttenuation: false,
+        fog: false
+      });
+      const pts = new THREE.Points(geo, mat);
+      pts.frustumCulled = false;
+      scene.add(pts);
+      return pts;
+    }
+    makeStars(2600, 2.2, 0.35); // fine dust
+    const midStars = makeStars(700, 3.6, 0.55);
+    const brightStars = makeStars(110, 6, 0.8); // the few that twinkle
+
+    /* ----- nebula clouds ----- */
+    function nebulaTex(colors) {
+      const S = 256;
+      const c = document.createElement('canvas');
+      c.width = c.height = S;
+      const g = c.getContext('2d');
+      g.globalCompositeOperation = 'lighter';
+      for (let i = 0; i < 60; i++) {
+        const a = Math.random() * Math.PI * 2;
+        const d = Math.pow(Math.random(), 0.8) * 78;
+        const x = S / 2 + Math.cos(a) * d;
+        const y = S / 2 + Math.sin(a) * d * 0.72;
+        const r = 26 + Math.random() * 52;
+        const col = colors[(Math.random() * colors.length) | 0];
+        const gr = g.createRadialGradient(x, y, 0, x, y, r);
+        gr.addColorStop(0, `rgba(${col},0.17)`);
+        gr.addColorStop(0.5, `rgba(${col},0.07)`);
+        gr.addColorStop(1, `rgba(${col},0)`);
+        g.fillStyle = gr;
+        g.fillRect(0, 0, S, S);
+      }
+      // fade to nothing at the edges so no square outline shows
+      g.globalCompositeOperation = 'destination-in';
+      const m = g.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
+      m.addColorStop(0, 'rgba(0,0,0,1)');
+      m.addColorStop(0.6, 'rgba(0,0,0,0.75)');
+      m.addColorStop(1, 'rgba(0,0,0,0)');
+      g.fillStyle = m;
+      g.fillRect(0, 0, S, S);
+      const t = new THREE.CanvasTexture(c);
+      t.encoding = THREE.sRGBEncoding;
+      return t;
+    }
+    const palettes = [
+      ['120,80,255', '70,120,255'], // violet and blue
+      ['236,72,153', '160,90,255'], // magenta and violet
+      ['40,190,200', '60,120,255'], // teal and blue
+      ['255,120,90', '236,72,153'] // a warm, rarer one
+    ];
+    const nebTex = palettes.map(nebulaTex);
+    const nebulae = [];
+    function addNebula(parent, x, y, z, size, opacity, pal) {
+      const mat = new THREE.SpriteMaterial({
+        map: nebTex[pal % nebTex.length],
+        transparent: true,
+        opacity,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        fog: false
+      });
+      mat.rotation = Math.random() * Math.PI * 2;
+      const sp = new THREE.Sprite(mat);
+      sp.position.set(x, y, z);
+      sp.scale.set(size, size * 0.8, 1);
+      parent.add(sp);
+      nebulae.push({ mat, spin: (Math.random() < 0.5 ? -1 : 1) * (0.004 + Math.random() * 0.008) });
+    }
+    // clouds beside the flight path, so you drift past them
+    const SPAN = N * STEP + 40;
+    for (let k = 0; k < 10; k++) {
+      const side = k % 2 ? 1 : -1;
+      addNebula(
+        scene,
+        side * (17 + Math.random() * 16),
+        (Math.random() * 2 - 1) * 14,
+        10 - (k / 9) * (SPAN + 30),
+        34 + Math.random() * 30,
+        0.38 + Math.random() * 0.22,
+        k
+      );
+    }
+    // big clouds that travel with the camera, so the backdrop is never empty
+    const backdrop = new THREE.Group();
+    scene.add(backdrop);
+    [
+      [-36, 16, -120, 150, 0.55, 0],
+      [34, -10, -125, 160, 0.5, 1],
+      [4, 24, -140, 170, 0.4, 2],
+      [-20, -26, -135, 140, 0.42, 3],
+      [48, 22, -130, 120, 0.4, 2]
+    ].forEach(n => addNebula(backdrop, n[0], n[1], n[2], n[3], n[4], n[5]));
 
     let started = false;
     function loadAll() {
       if (started) return;
       started = true;
-      POSTERS.forEach((p, i) => loadImage(bySize(p.id)).then(im => setImage(posters[i].tex, im)));
+      gallery.forEach((p, i) => loadImage(bySize(p.id)).then(im => setImage(posters[i].tex, im)));
     }
 
     fit(renderer, camera, canvas);
@@ -327,7 +329,7 @@
     const ptr = pointerOn(canvas);
     canvas.addEventListener('click', e => {
       const i = pickFrom(canvas, camera, clickable, e.clientX, e.clientY);
-      if (i >= 0) goCustomize(POSTERS[i].id);
+      if (i >= 0) goCustomize(gallery[i].id);
     });
 
     const copy = document.getElementById('s3d-copy');
@@ -358,19 +360,21 @@
       camera.lookAt(sx * 0.35, sy * 0.35, camera.position.z - 10);
       camera.rotation.z += Math.sin(current * Math.PI * 2) * 0.08;
 
+      // the backdrop clouds follow the camera, with a slight parallax shift
+      backdrop.position.set(camera.position.x * 0.9, camera.position.y * 0.9, camera.position.z);
+      nebulae.forEach(n => (n.mat.rotation += n.spin * 0.016));
+      midStars.material.opacity = 0.8 + Math.sin(time * 1.3) * 0.2;
+      brightStars.material.opacity = 0.7 + Math.sin(time * 2.1 + 1.7) * 0.3;
+
       hovered = ptr.over ? pickFrom(canvas, camera, clickable, ptr.cx, ptr.cy) : -1;
       canvas.style.cursor = hovered >= 0 ? 'pointer' : 'grab';
-      if (hovered >= 0) showTip(POSTERS[hovered].title, ptr.cx, ptr.cy);
+      if (hovered >= 0) showTip(gallery[hovered].title, ptr.cx, ptr.cy);
       else hideTip();
 
       posters.forEach((o, i) => {
         o.g.position.y = o.baseY + Math.sin(time * 0.8 + o.phase) * 0.08;
         o.scale += ((i === hovered ? 1.07 : 1) - o.scale) * 0.15;
         o.g.scale.setScalar(o.scale);
-      });
-      decor.forEach(d => {
-        d.g.rotation.y = current * 10 * d.spin + d.phase;
-        d.g.rotation.x = time * 0.2 * d.spin + d.phase;
       });
 
       let nearest = 0;
@@ -384,7 +388,7 @@
       });
       if (nearest !== lastNearest) {
         lastNearest = nearest;
-        now.textContent = `${POSTERS[nearest].title} · ${nearest + 1}/${N}`;
+        now.textContent = `${gallery[nearest].title} · ${nearest + 1}/${N}`;
       }
       fill.style.width = current * 100 + '%';
       copy.style.opacity = String(1 - clamp(current * 7, 0, 1));
@@ -398,7 +402,7 @@
   }
 
   /* ====================================================================
-     3. SURFACES: four real 3D panels that catch the light
+     2. SURFACES: four real 3D panels that catch the light
      ==================================================================== */
   function initSlabs() {
     const canvas = document.getElementById('slabs3d');
@@ -447,28 +451,7 @@
     key.position.set(3, 4, 6);
     scene.add(key);
 
-    // procedural textures: brushed metal lines and canvas weave
-    function brushed() {
-      const c = document.createElement('canvas');
-      c.width = c.height = 256;
-      const g = c.getContext('2d');
-      g.fillStyle = '#808080';
-      g.fillRect(0, 0, 256, 256);
-      for (let i = 0; i < 900; i++) {
-        const v = 90 + Math.random() * 120;
-        g.strokeStyle = `rgba(${v},${v},${v},${0.1 + Math.random() * 0.25})`;
-        g.lineWidth = 1;
-        const y = Math.random() * 256;
-        const x0 = Math.random() * 256;
-        g.beginPath();
-        g.moveTo(x0, y);
-        g.lineTo(x0 + 40 + Math.random() * 200, y);
-        g.stroke();
-      }
-      const t = new THREE.CanvasTexture(c);
-      t.wrapS = t.wrapT = THREE.RepeatWrapping;
-      return t;
-    }
+    // procedural texture: canvas weave
     function weave() {
       const c = document.createElement('canvas');
       c.width = c.height = 64;
@@ -484,7 +467,6 @@
       t.repeat.set(26, 15);
       return t;
     }
-    const brushedTex = brushed();
     const weaveTex = weave();
 
     // soft shadow under each panel
@@ -529,7 +511,7 @@
       }
       if (id === 'stainless-steel') {
         const side = new THREE.MeshStandardMaterial({ color: 0xbfc4ca, metalness: 1, roughness: 0.3 });
-        const front = new THREE.MeshStandardMaterial({ map: posterTex, metalness: 0.85, roughness: 0.3, bumpMap: brushedTex, bumpScale: 0.25, envMapIntensity: 1.4 });
+        const front = new THREE.MeshStandardMaterial({ map: posterTex, metalness: 0.85, roughness: 0.28, envMapIntensity: 1.4 });
         return [side, side, side, side, front, side];
       }
       if (id === 'aluminum') {
@@ -634,7 +616,6 @@
     whenVisible(slabSec, '100px 0px', loop.set);
   }
 
-  initHero();
   initTunnel();
   initSlabs();
 })();

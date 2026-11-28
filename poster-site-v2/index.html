@@ -23,7 +23,6 @@
         <div class="mega-triggers">
           <button class="mega-trigger" type="button" data-pane="explore" aria-expanded="false" aria-controls="mega">Explore <svg viewBox="0 0 12 8" width="12" height="8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
           <button class="mega-trigger" type="button" data-pane="custom" aria-expanded="false" aria-controls="mega">Custom Posters <svg viewBox="0 0 12 8" width="12" height="8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
-          <a class="pill-link" href="#showcase" data-act="goto" data-target="#showcase">3D Gallery</a>
           <button class="mega-trigger" type="button" data-pane="foryou" aria-expanded="false" aria-controls="mega">For You <svg viewBox="0 0 12 8" width="12" height="8" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
         </div>
       </nav>
@@ -60,7 +59,7 @@
   </header>
 
   <main id="top">
-    <!-- 3D hero: a ring of posters you can drag -->
+    <!-- Hero -->
     <section class="hero" id="hero" data-no-ink>
       <div class="aura" aria-hidden="true">
         <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
@@ -86,7 +85,7 @@
         <div class="hero-copy">
           <span class="pill">New &middot; the collection in 3D</span>
           <h1>Turn your walls into a <em>gallery</em>.</h1>
-          <p>Posters of places, cities and space, printed on steel, acrylic, aluminum or canvas. Spin the collection, pick a surface, and preview it before you buy.</p>
+          <p>Posters of places, cities and space, printed on steel, acrylic, aluminum or canvas. Browse the collection, pick a surface, and preview it before you buy.</p>
           <div class="hero-actions">
             <a class="btn btn-lime" href="#featured" data-act="goto" data-target="#featured">Shop posters</a>
             <a class="btn btn-ghost" href="#showcase" data-act="goto" data-target="#showcase">Fly through in 3D</a>
@@ -96,15 +95,6 @@
             <li><strong>4</strong> surfaces</li>
             <li><strong>Free</strong> shipping</li>
           </ul>
-        </div>
-        <div class="hero-stage">
-          <canvas id="hero3d" role="img" aria-label="A ring of floating posters. Drag to spin it, click a poster to customize it."></canvas>
-          <div class="hero-fallback" aria-hidden="true">
-            <img src="./img/thumbs/bora-bora.jpg" alt="">
-            <img src="./img/thumbs/kyoto.jpg" alt="">
-            <img src="./img/thumbs/saturn.jpg" alt="">
-          </div>
-          <p class="hero-hint">Drag to spin &middot; Click a poster to customize it</p>
         </div>
       </div>
     </section>
@@ -141,13 +131,12 @@
       </div>
     </section>
 
-    <!-- 3D tunnel: scroll to fly through every poster -->
+    <!-- 3D space gallery: scroll to fly past the planets, through stars and nebula clouds -->
     <section id="showcase" class="showcase" aria-label="3D gallery" data-no-ink>
       <div class="showcase-sticky">
-        <canvas id="s3d" role="img" aria-label="A 3D tunnel of floating posters that moves as you scroll"></canvas>
+        <canvas id="s3d" role="img" aria-label="A 3D space gallery of floating planet posters among stars and nebula clouds. Scroll to fly forward."></canvas>
         <div class="showcase-copy" id="s3d-copy">
-          <span class="pill dark">3D gallery</span>
-          <h2>Fly through the collection</h2>
+          <h2>Fly through space</h2>
           <p>Scroll to move forward. Click a poster to customize it.</p>
         </div>
         <div class="showcase-hud" aria-hidden="true">
@@ -173,11 +162,27 @@
 
     <section id="customize" class="section">
       <div class="container config">
-        <div id="stage" class="stage">
-          <div id="preview-frame" class="frame canvas">
-            <img id="preview-img" src="./img/iceland.jpg" alt="">
+        <div id="stage" class="stage viewer" data-view="orbit" data-no-ink>
+          <div class="v-rail"><div class="v-rail-in" id="v-tabs" role="tablist" aria-orientation="vertical" aria-label="Choose a view"></div></div>
+          <div class="v-main" id="v-main">
+            <!-- flat preview: shown until the 3D model is ready, or when 3D isn't available -->
+            <div class="v-flatwrap"><div id="preview-frame" class="frame canvas"><img id="preview-img" src="./img/iceland.jpg" alt=""></div></div>
+            <canvas id="v3d" role="img" aria-label="3D model of the poster. Drag to turn it around."></canvas>
+            <div id="v-room" class="v-room" hidden></div>
+            <div id="v-hots" class="v-hots"></div>
+            <span id="stage-label" class="stage-label" aria-live="polite"></span>
+            <div class="v-tools">
+              <button id="viewer-wish" class="heart inline v-btn" type="button" data-save="" aria-pressed="false" aria-label="Save to your wishlist"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
+              <button id="v-zoom-btn" class="v-btn" type="button" aria-label="Zoom into the artwork"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21M10.5 7.5v6M7.5 10.5h6"/></svg></button>
+            </div>
+            <button id="v-discover" class="v-discover" type="button"><span id="v-discover-text">Discover more</span><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div id="v-card" class="v-card" hidden role="group" aria-live="polite" aria-label="Poster detail">
+              <div class="v-card-top"><span id="v-card-count"></span><button id="v-card-close" type="button" aria-label="Close detail">&times;</button></div>
+              <h3 id="v-card-title"></h3>
+              <p id="v-card-text"></p>
+              <div class="v-card-nav"><button id="v-prev" type="button" aria-label="Previous detail">&lsaquo;</button><div class="v-dots" id="v-dots" aria-hidden="true"></div><button id="v-next" type="button" aria-label="Next detail">&rsaquo;</button></div>
+            </div>
           </div>
-          <span id="stage-label" class="stage-label" aria-live="polite"></span>
         </div>
 
         <div class="config-panel">
@@ -242,7 +247,6 @@
       <div class="f-col">
         <h3>Explore</h3>
         <a class="flink" href="#featured" data-act="goto" data-target="#featured">Featured posters</a>
-        <a class="flink" href="#showcase" data-act="goto" data-target="#showcase">3D gallery</a>
         <a class="flink" href="#surfaces-section" data-act="goto" data-target="#surfaces-section">Compare surfaces</a>
         <a class="flink" href="#customize" data-act="goto" data-target="#customize">Customize a poster</a>
       </div>
@@ -266,6 +270,23 @@
       <div id="all-chips" class="chips" role="group" aria-label="Filter posters"></div>
       <div id="all-grid" class="grid"></div>
     </div>
+  </div>
+
+  <div id="v-zoom" class="v-zoom" hidden role="dialog" aria-modal="true" aria-labelledby="vz-title">
+    <div class="vz-bar">
+      <span id="vz-title"></span>
+      <div class="vz-tools">
+        <button id="vz-out" class="icon-btn" type="button" aria-label="Zoom out">&minus;</button>
+        <output id="vz-level" aria-live="polite">100%</output>
+        <button id="vz-in" class="icon-btn" type="button" aria-label="Zoom in">+</button>
+        <button id="vz-close" class="icon-btn" type="button" aria-label="Close the zoomed view">&times;</button>
+      </div>
+    </div>
+    <div id="vz-view" class="vz-view">
+      <img id="vz-img" alt="" draggable="false">
+      <div id="vz-lens" class="vz-lens" hidden></div>
+    </div>
+    <p class="vz-hint">Click to zoom &middot; scroll to zoom further &middot; drag to move around &middot; Esc to close</p>
   </div>
 
   <div id="panel-overlay" class="overlay panel-overlay"></div>
@@ -357,5 +378,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="./script.js"></script>
   <script src="./scenes.js"></script>
+  <script src="./viewer.js"></script>
 </body>
 </html>

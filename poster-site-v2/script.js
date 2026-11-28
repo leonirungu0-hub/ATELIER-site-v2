@@ -799,7 +799,6 @@ function buildExplore() {
     menuCol('Start browsing', [
       { label: 'All posters', act: 'all', id: 'All' },
       { label: 'Featured posters', act: 'goto', target: '#gallery-section' },
-      { label: '3D gallery', act: 'goto', target: '#showcase' },
       { label: 'Compare surfaces', act: 'goto', target: '#surfaces-section' },
       { label: 'Customize a poster', act: 'goto', target: '#customize' }
     ]),
